@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+
+// List of components
 import Navbar from "./components/layout/Navbar";
 import SignIn from "./components/auth/SignIn";
 import CreatePatient from "./components/doctor/CreatePatient";
@@ -17,6 +19,8 @@ function App(props) {
       <div className="App">
         <Navbar />
       </div>
+      {/* The <Switch> element is used to group the <Route> elements 
+      and ensure that only the first matching route will be rendered. */}
       <Switch>
         <Route exact path="/" component={Login} />
         <Route path="/login" component={Login} />
@@ -37,6 +41,9 @@ function App(props) {
           auth={props.auth}
         />
         <Route path="/myprofile/:id" component={MyProfile} />
+        {/* The final <Route> element has a path property of "*", which is a wildcard that matches any URL 
+        path that has not already been matched by a previous route. This route is typically used to render a "not found" or "404" 
+        page for URLs that do not match any other defined routes. */}
         <Route path="*" component={NotFoundPage} />
       </Switch>
     </BrowserRouter>

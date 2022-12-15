@@ -13,6 +13,7 @@ const Navbar = props => {
 
   return (
     <Layout className="layout">
+      {/* Header */}
       <Header>
         <div className="logo" />
         <a href="#">Patient Portal</a>

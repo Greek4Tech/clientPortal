@@ -66,9 +66,11 @@ class Login extends React.Component {
     } else openNotification("Error", "Invalid Credentials");
   };
   render() {
+    // if provider manages to log in, redirect to /patientlist
     if (this.props.auth.isLoggedIn === true) {
       if (this.props.auth.domain === "doctor")
         return <Redirect to="/patientlist" />;
+        // // if the patient  manages to log in, redirect to /patientlist
       if (this.props.auth.domain === "patient")
         return <Redirect to={"/myprofile/" + this.props.auth.id} />;
     }
