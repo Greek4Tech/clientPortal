@@ -62,7 +62,7 @@ class PatientList extends React.Component {
             <List.Item
               actions={[
                 <a id={item.email} onClick={this.handleEdit}>
-                  > Edit
+                  Edit
                 </a>,
                 <a id={item.email} onClick={this.handleDelete}>
                   Delete
