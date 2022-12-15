@@ -50,6 +50,7 @@ const CreatePatient = props => {
 
   const [fields, setFields] = useState([{ value: null }]);
   const [meds, setMeds] = useState([{ meds: null }]);
+  const [gender, setGender] = useState("");
 
   console.log("fields first", fields);
 
@@ -90,6 +91,10 @@ const CreatePatient = props => {
     setMeds(values);
   }
 
+  const handleGender = (event) => {
+    setGender(event.target.value);
+  };
+
   const config = {
     rules: [{ type: "object", required: true, message: "Please select time!" }]
   };
@@ -129,13 +134,21 @@ const CreatePatient = props => {
         >
           <InputNumber />
         </Form.Item>
+
+        {/* write-in gender as a string */}
         <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
+          <Input value={gender} onChange={handleGender} />
+        </Form.Item>
+
+        {/* Drop down menu to select gender, more genders must be added */}
+        {/* <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
           <Select allowClear>
             <Option value="male">male</Option>
             <Option value="female">female</Option>
             <Option value="other">other</Option>
           </Select>
-        </Form.Item>
+        </Form.Item> */}
+
         <Form.Item name="symptoms" label="Symptoms">
           <Button
             type="primary"
