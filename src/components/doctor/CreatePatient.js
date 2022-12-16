@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useDispatch } from "react";
 import { connect } from "react-redux";
 import {
   Form,
@@ -34,7 +34,11 @@ const validateMessages = {
 const dateFormat = "YYYY/MM/DD";
 
 const CreatePatient = props => {
+  const patientId = Math.floor(Math.random(10000))
+  const patientString = localStorage.getItem("patient-" + patientId);
+  const patient = JSON.parse(patientString);
   const [form] = Form.useForm();
+  // This is a JavaScript function named onFinish that takes in a single parameter valuesToPass. The function uses the valuesToPass object to access and modify several properties, including date_of_birth and date_of_last_visit. It then calls the add_patient method with valuesToPass as an argument and uses the history object from the props parameter to navigate to a new page at the URL "/patientlist".
   const onFinish = valuesToPass => {
     valuesToPass.date_of_birth = valuesToPass.date_of_birth.format(
       "YYYY/MM/DD"
@@ -45,15 +49,17 @@ const CreatePatient = props => {
     valuesToPass.symptoms = fields;
     valuesToPass.medicines = meds;
     props.add_patient(valuesToPass);
+    localStorage.setItem("patient-123", JSON.stringify(patient)); // save patient to local storage
     props.history.push("/patientlist");
   };
+  
 
   const [fields, setFields] = useState([{ value: null }]);
   const [meds, setMeds] = useState([{ meds: null }]);
   const [gender, setGender] = useState("");
 
   console.log("fields first", fields);
-
+  //several event handlers for handling user interactions with the form, such as adding or removing symptoms and medicines, and for submitting the form. 
   function handleChange(i, event) {
     const values = [...fields];
     values[i].value = event.target.value;
