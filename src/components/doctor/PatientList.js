@@ -31,6 +31,19 @@ class PatientList extends React.Component {
       medicines: modalData[0].medicines
     });
   };
+
+  // getting stuff from backend
+  componentDidMount = () => {
+    fetch("/api/patients").then(response => {
+      return response.json()
+    }).then(data => {
+      // dispatch 
+      for (let i=0; i<data.patients.length; i++){
+        this.props.upsert(data.patients[i]) 
+      }
+    })
+  };
+
   handleOk = e => {
     this.setState({
       visible: false
@@ -52,6 +65,7 @@ class PatientList extends React.Component {
     const symptoms = [...this.state.symptoms];
     const medicines = [...this.state.medicines];
     const { patients } = this.props;
+    console.log(this.props)
     return (
       <div>
         <List
@@ -133,8 +147,13 @@ const mapPropsToState = dispatch => {
   return {
     delete_patient: data => {
       dispatch({ type: "DELETE_PATIENT", data: data });
+    },
+    upsert: data => {
+      dispatch({ type: "UPSERT", data: data });
     }
   };
 };
+
+
 
 export default connect(mapStateToProps, mapPropsToState)(PatientList);
