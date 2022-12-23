@@ -61,15 +61,24 @@ const patientReducer = (state = initState, action) => {
       // this action (i.e. action.type === "UPSERT") updates an existing patient in the list of patient if one exists with the same email, or adds a new patient to the list if no patient with the same email exists. The patient information is provided in the action.data property. 
 
 
-      
-    case "UPSERT": {
+    // This block of code will be executed if the value of the `action.type` property is "UPSERT"  
+    // UPSET = Update and Insert - An upsert is a database operation that will update an existing row if a specified value already exists in a table, and insert a new row if specified value doesn't already exist
+    case "UPSERT": { 
+      // Create a new array called `newPatients` that is a copy of the `state.patients` array
       const newPatients = [...state.patients]
+
+      // Find the patient in the `state.patients` array whose email matches the email in the `action.data` object. In this code `action.data` is an object that contains data related to the action being performed.
       const existingPatient = state.patients.find(patient => patient.email === action.data.email) 
+
+      // if existingPatient were found, update it's properties with the values from the `action.data` object
       if (existingPatient) {
+        // In this case, `Object.assign()` method is used to copy the properties and their values from the `action.data` object into the `existingPatient` object. This effectively updates the `existingPatient` object with the new data contained in teh `action.data`
         Object.assign(existingPatient, action.data)
+        // If no existing patient was found, push the `action.data` object onto the `newPatients` array
       }else{
         newPatients.push(action.data)  
-      }         
+      }
+        // Return a new object that has the same properties as the original `state` object, except with the `patients` property set to the updated `newPatients` array  
       return {
         ...state,
         patients: newPatients
