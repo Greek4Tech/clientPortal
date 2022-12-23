@@ -3,7 +3,7 @@ const initState = {
   ]
 };
 
-// patientReducer that is responsible for updating the state of a Redux store in response to actions dispatched to the store.
+// patientReducer that is responsible for updating the state of a !Redux store! in response to actions dispatched to the store.
 // patientReducer function takes in two arguments: 
   // state: This is the current state of the Redux store. Initial value is initState as a default argument, which means that if no state is provided, the initial state will be initState
   // action: This is the object that represents an action dispatched to the store. It has a type property that specifies the type of action being dispatched, and may also have a data property that contains additional data relevant to the action (e.g. line 14 patients: "...action.data"")
@@ -31,7 +31,7 @@ const patientReducer = (state = initState, action) => {
         // `action.data.email === patients.email ? action.data : patients`: This is an arrow function that is called on each element in the `state.patients` array. It uses the ternary operator to return either the `action.data` object, or the current `patients` element, depending on whether the `email` property of `action.data` is equal to `email` property of `patients`. If the `email` properties are equal, it means that the current `patients` element represents the patient that is being edited, so the updated patient data in `action.data` is returned. If the `email` properties are not equal, it means that the current `patients` element represents a different patient, so the original `patients` element is returned. 
         action.data.email === patients.email ? action.data : patients
       );
-      // return { ...state, patients: newPatients }: This line returns a new object that is a copy of the `state` object, with the `patients` property set to the `newPatients` array. The `...` operator is used to create a new object rather than modidying the existing `state` object, which would violate the principle of immutability in Redux.
+      // return { ...state, patients: newPatients }: This line returns a !new object! that is a copy of the `state` object, with the `patients` property set to the `newPatients` array. The `...` operator is used to create a new object rather than modidying the existing `state` object, which would violate the principle of immutability in Redux.
       return {
         ...state,
         patients: newPatients
@@ -42,16 +42,26 @@ const patientReducer = (state = initState, action) => {
       // this action (i.e. action.type === "DELETE_PATIENT") removes a patient from the list of paients. The email of the patient to be removed is provided in the action.data property
 
 
-
+    // this block of code will be executed if the value of the `action.type` property is "DELETE_PATIENT"
     case "DELETE_PATIENT":
+      // Declare a new variable `newState` that will hold the filtered list of patients
       let newState = state.patients.filter(patient => {
+        // this is an arrow function that will be called for each element in the `state.patients` array
+        // the `patient` parameter represents the current element being processed
+
+        // return `true` if the patient's email does not match the value of `action.data`, and `false` otherwise
         return patient.email !== action.data;
       });
+      // Return a new object that has the same properties as the original `state` object,
+      // except with the `patiens` property set to the filtered list stored in `newState`
       return {
         ...state,
         patients: newState
       };
       // this action (i.e. action.type === "UPSERT") updates an existing patient in the list of patient if one exists with the same email, or adds a new patient to the list if no patient with the same email exists. The patient information is provided in the action.data property. 
+
+
+      
     case "UPSERT": {
       const newPatients = [...state.patients]
       const existingPatient = state.patients.find(patient => patient.email === action.data.email) 
