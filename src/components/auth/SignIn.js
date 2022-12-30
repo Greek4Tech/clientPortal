@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Form, Input, Button, notification } from "antd";
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
+import axios from 'axios';
 import userAuth from "./user_auth";
 
 const openNotification = (title, msg) => {
@@ -11,28 +12,7 @@ const openNotification = (title, msg) => {
   });
 };
 
-const auth_data = {
-  users: [
-    {
-      id: "10",
-      password: "1234",
-      domain: "doctor",
-      email: "Michael@office.com"
-    },
-    {
-      id: "1",
-      password: "1234",
-      domain: "patient",
-      email: "dwight@office.com"
-    },
-    {
-      id: "2",
-      password: "1234",
-      domain: "patient",
-      email: "James@office.com"
-    }
-  ]
-};
+// These are objects containing layout information for the form. They are used to customize the appearance of the form.
 const layout = {
   labelCol: {
     span: 8
@@ -48,25 +28,42 @@ const tailLayout = {
   }
 };
 
+// This is a function that is called when the form submission fails. It logs the error information to the console.
 const onFinishFailed = errorInfo => {
   console.log("Failed:", errorInfo);
 };
 
 class Login extends React.Component {
+  // This is a method of the `Login` class that is called when the form is submitted. It takes an object containing the form values as an argument and attempts to authenticate the user by checking if their email and password match a user in our database (regardless where the database is). If the login is succesful, it dispatches it to the Redux store.
   login = values => {
-    var user_logging_in = auth_data.users.find(user => {
-      return user.email === values.username;
-    });
-    if (!user_logging_in) {
-      openNotification("Error", "User does not exist!");
-      return false;
-    }
-    if (user_logging_in.password === values.password) {
-      this.props.user_login(user_logging_in);
-    } else openNotification("Error", "Invalid Credentials");
-  };
+    // This line calls the axios library, making HTTP requests in JavaScript.
+    axios
+    // This chain of method calls sends a POST request to the /api/login endpoint on the backend with the following object as the request body:
+      .post('/login', {
+        email: values.username,
+        password: values.password
+      })
+      // This chain of method calls sets up a callback function to be called when the request is successful. !The response argument is the response from the server!
+      .then(response => {
+        console.log(response)
+        // This line checks if the success field in the response data is true. If it is, it continues to the next line.
+        if (response.data.success) {
+          // This line calls the `user_login` method from the component's props (which is a a Redux action) with the `user` field from the response data as an argument. This will update the Redux store with the user data returned by the backend.  
+          this.props.user_login(response.data.user);
+        } else {
+          openNotification('Error', 'Invalid Credentials');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        openNotification('Error', 'An error occurred while logging in');
+      });
+  };  
+
+  
   render() {
     // if provider manages to log in, redirect to /patientlist
+    // This is a method of the `Login` class that retuns the JSX code for rendering the login form. It first cheks if the user is already logged in, and if so, it redirects them to a different page depending on their role. If the user is logged in, it returns the form. 
     if (this.props.auth.isLoggedIn === true) {
       if (this.props.auth.domain === "doctor")
         return <Redirect to="/patientlist" />;
